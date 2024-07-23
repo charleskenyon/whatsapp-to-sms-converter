@@ -1,0 +1,28 @@
+{
+  "name": "whatsapp-to-sms-converter",
+  "version": "1.0.0",
+  "description": "Software stack for converting whatsapp messages to sms messages. Requires AWS account and running fargate instance.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charleskenyon/whatsapp-to-sms-converter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/charleskenyon/whatsapp-to-sms-converter/issues"
+  },
+  "homepage": "https://github.com/charleskenyon/whatsapp-to-sms-converter#readme",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.1.0",
+    "ts-node": "^10.9.1"
+  }
+}
