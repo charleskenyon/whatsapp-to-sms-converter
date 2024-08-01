@@ -1,6 +1,8 @@
 all: init plan
 # all: init plan apply
 
+layer						?= whatsapp-converter-service
+
 AWS_DEFAULT_REGION          ?= eu-west-2
 
 TF_VAR_project            	?= whatsapp-to-sms-converter
@@ -15,23 +17,23 @@ export
 
 # init: check-var-env check-var-layer
 init:
-	cd infrastructure && rm -rf .terraform/
-	cd infrastructure && terraform init -backend=true \
+	cd infrastructure/$(layer) && rm -rf .terraform/
+	cd infrastructure/$(layer) && terraform init -backend=true \
 		-backend-config="bucket=$(TF_VAR_state_bucket)" \
 		-backend-config="dynamodb_table=$(TF_VAR_state_dynamodb_table)" \
-		-backend-config="key=default/terraform.tfstate" \
+		-backend-config="key=$(layer)/terraform.tfstate" \
 		-backend-config="region=$(TF_VAR_region)" \
 		-backend-config="encrypt=true"
 
 validate: 
-	cd infrastructure && terraform validate
+	cd infrastructure/$(layer) && terraform validate
 
 plan: 
-	cd infrastructure && terraform plan \
+	cd infrastructure/$(layer) && terraform plan \
 		-out /tmp/plan;
 
 apply: 
-	cd infrastructure && terraform apply 
+	cd infrastructure/$(layer) && terraform apply 
 
 destroy: 
-	cd infrastructure && terraform destroy
+	cd infrastructure/$(layer) && terraform destroy

@@ -8,6 +8,7 @@ node_modules/
 .Trash-*
 .nfs*
 
+.terraform
 **/.terraform/*
 *.tfstate
 *.tfstate.*
