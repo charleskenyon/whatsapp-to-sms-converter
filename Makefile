@@ -37,3 +37,6 @@ apply:
 
 destroy: 
 	cd infrastructure/$(layer) && terraform destroy
+
+output: 
+	cd infrastructure/$(layer) && terraform output
