@@ -19,23 +19,47 @@ data "aws_internet_gateway" "default" {
     values = [data.aws_vpc.default.id]
   }
 }
+
+data "aws_security_group" "default" {
+  vpc_id = data.aws_vpc.default.id
+
+  filter {
+    name   = "group-name"
+    values = ["default"]
+  }
+}
+
 resource "aws_ecs_cluster" "cluster" {
   name = "${var.project}-cluster"
 
 }
 
-resource "aws_ecs_service" "service" {
+resource "aws_ecs_service" "whatsapp_converter_service" {
   name            = "${var.project}-service"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.whatsapp_converter_task_definition.arn
-  desired_count   = 0
+  desired_count   = 1
   launch_type     = "FARGATE"
 
  network_configuration {
     subnets         = data.aws_subnets.default.ids
     assign_public_ip = true
   }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.whatsapp_converter_alb_target_group.arn
+    container_name   = var.project
+    container_port   = "80"
+    }
 }
+
+# + network_configuration {
+# +   assign_public_ip = false
+
+# +   security_groups = [
+# +     aws_security_group.egress_all.id,
+# +     aws_security_group.ingress_api.id,
+# +   ]
 
 resource "aws_cloudwatch_log_group" "whatsapp_converter_log_group" {
   name = "/ecs/${var.project}"
@@ -53,7 +77,7 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
   [
     {
       "name": "${var.project}",
-      "image": "vad1mo/hello-world-rest",
+      "image": "nginxdemos/hello",
       "portMappings": [
         {
           "containerPort": 80,
