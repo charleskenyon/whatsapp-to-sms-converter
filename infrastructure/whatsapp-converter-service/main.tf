@@ -13,57 +13,31 @@ data "aws_subnets" "default" {
   }
 }
 
-data "aws_internet_gateway" "default" {
-  filter {
-    name   = "attachment.vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-}
-
-data "aws_security_group" "default" {
-  vpc_id = data.aws_vpc.default.id
-
-  filter {
-    name   = "group-name"
-    values = ["default"]
-  }
-}
-
 resource "aws_ecs_cluster" "cluster" {
   name = "${var.project}-cluster"
-
 }
 
 resource "aws_ecs_service" "whatsapp_converter_service" {
   name            = "${var.project}-service"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.whatsapp_converter_task_definition.arn
-  desired_count   = 1
+  desired_count   = 0
   launch_type     = "FARGATE"
 
  network_configuration {
     subnets         = data.aws_subnets.default.ids
-    assign_public_ip = true
+    assign_public_ip = true # add VPC endpoint (to pull container image)
     security_groups = [
-      aws_security_group.egress_all.id,
-      aws_security_group.ingress_api.id,
+      aws_security_group.whatsapp_converter_sg_backend.id,
     ]
   }
 
   load_balancer {
     target_group_arn = aws_lb_target_group.whatsapp_converter_alb_target_group.arn
     container_name   = var.project
-    container_port   = "80"
+    container_port   = var.container_port
     }
 }
-
-# + network_configuration {
-# +   assign_public_ip = false
-
-# +   security_groups = [
-# +     aws_security_group.egress_all.id,
-# +     aws_security_group.ingress_api.id,
-# +   ]
 
 resource "aws_cloudwatch_log_group" "whatsapp_converter_log_group" {
   name = "/ecs/${var.project}"
@@ -81,10 +55,10 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
   [
     {
       "name": "${var.project}",
-      "image": "nginxdemos/hello",
+      "image": "${var.container_image}",
       "portMappings": [
         {
-          "containerPort": 80
+          "containerPort": ${var.container_port}
         }
       ],
       "logConfiguration": {
@@ -103,15 +77,6 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
 output "default_subnet_ips" {
   value       = data.aws_subnets.default.ids
   description = "default subnet ips"
-}
-
-output "default_igw_id" {
-  value       = data.aws_internet_gateway.default.id
-  description = "default internet gateway id"
-}
-
-output "default_sg" {
-  value       = data.aws_security_group.default.id 
 }
 
 # https://section411.com/2019/07/hello-world/
