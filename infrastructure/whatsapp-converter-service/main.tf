@@ -44,6 +44,10 @@ resource "aws_ecs_service" "whatsapp_converter_service" {
  network_configuration {
     subnets         = data.aws_subnets.default.ids
     assign_public_ip = true
+    security_groups = [
+      aws_security_group.egress_all.id,
+      aws_security_group.ingress_api.id,
+    ]
   }
 
   load_balancer {
@@ -80,8 +84,7 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
       "image": "nginxdemos/hello",
       "portMappings": [
         {
-          "containerPort": 80,
-          "hostPort": 80
+          "containerPort": 80
         }
       ],
       "logConfiguration": {
@@ -105,6 +108,10 @@ output "default_subnet_ips" {
 output "default_igw_id" {
   value       = data.aws_internet_gateway.default.id
   description = "default internet gateway id"
+}
+
+output "default_sg" {
+  value       = data.aws_security_group.default.id 
 }
 
 # https://section411.com/2019/07/hello-world/
