@@ -93,4 +93,13 @@ output "default_subnet_ips" {
 # https://awsteele.com/blog/2022/10/15/cheap-serverless-containers-using-api-gateway.html
 
 
-# add tags to all resources
+# https://www.linkedin.com/pulse/how-upload-docker-images-aws-ecr-using-terraform-hendrix-roa
+
+# https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/build-and-push-docker-images-to-amazon-ecr-using-github-actions-and-terraform.html
+
+# https://earthly.dev/blog/deploy-dockcontainers-to-awsecs-using-terraform/
+
+
+# https://stackoverflow.com/questions/51083134/how-to-compile-typescript-in-dockerfile
+# https://www.emmanuelgautier.com/blog/snippets/typescript-dockerfile
+# https://chinwendu.medium.com/how-to-dockerize-your-typescript-application-with-multi-stage-build-a-step-by-step-guide-56e7c4274088
