@@ -32,11 +32,11 @@ resource "aws_ecs_service" "whatsapp_converter_service" {
     ]
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.whatsapp_converter_alb_target_group.arn
-    container_name   = var.project
-    container_port   = var.container_port
-    }
+  # load_balancer {
+  #   target_group_arn = aws_lb_target_group.whatsapp_converter_alb_target_group.arn
+  #   container_name   = var.project
+  #   container_port   = var.container_port
+  # }
 }
 
 resource "aws_cloudwatch_log_group" "whatsapp_converter_log_group" {
@@ -89,3 +89,8 @@ output "default_subnet_ips" {
 # https://github.com/joshbeard/terraform-ecs-hello-world/blob/master/ecs.tf
 
 // add load balancer
+
+# https://awsteele.com/blog/2022/10/15/cheap-serverless-containers-using-api-gateway.html
+
+
+# add tags to all resources

@@ -30,7 +30,7 @@ resource "aws_security_group" "whatsapp_converter_sg_backend" {
     to_port     = var.container_port
     protocol    = "TCP"
     cidr_blocks = ["0.0.0.0/0"]
-    security_groups = [aws_security_group.whatsapp_converter_sg_frontend.id]
+    # security_groups = [aws_security_group.whatsapp_converter_sg_frontend.id]
   }
   egress {
     from_port   = 0
