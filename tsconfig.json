@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
+    "sourceMap": false,
+    "rootDir": "./src",
+    "skipLibCheck": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

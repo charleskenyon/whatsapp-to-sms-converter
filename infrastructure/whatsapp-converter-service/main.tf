@@ -24,8 +24,8 @@ resource "aws_ecs_service" "whatsapp_converter_service" {
   desired_count   = 0
   launch_type     = "FARGATE"
 
- network_configuration {
-    subnets         = data.aws_subnets.default.ids
+  network_configuration {
+    subnets          = data.aws_subnets.default.ids
     assign_public_ip = true # add VPC endpoint (to pull container image)
     security_groups = [
       aws_security_group.whatsapp_converter_sg_backend.id,
@@ -44,12 +44,12 @@ resource "aws_cloudwatch_log_group" "whatsapp_converter_log_group" {
 }
 
 resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
-  family = var.project
-  cpu = 256
-  memory = 512
+  family                   = var.project
+  cpu                      = 256
+  memory                   = 512
   requires_compatibilities = ["FARGATE"]
-  network_mode = "awsvpc"
-  execution_role_arn = aws_iam_role.whatsapp_converter_task_execution_role.arn
+  network_mode             = "awsvpc"
+  execution_role_arn       = aws_iam_role.whatsapp_converter_task_execution_role.arn
 
   container_definitions = <<EOF
   [

@@ -1,14 +1,14 @@
-all: init plan
+all: init plan format
 # all: init plan apply
 
 layer						?= whatsapp-converter-service
 
-AWS_DEFAULT_REGION          ?= eu-west-2
+AWS_DEFAULT_REGION			?= eu-west-2
 
 TF_VAR_project            	?= whatsapp-to-sms-converter
-TF_VAR_region                = $(AWS_DEFAULT_REGION)
-TF_VAR_state_bucket         ?= $(TF_VAR_project)-state-bucket
-TF_VAR_state_dynamodb_table ?= $(TF_VAR_project)-state-table
+TF_VAR_region				= $(AWS_DEFAULT_REGION)
+TF_VAR_state_bucket        	?= $(TF_VAR_project)-state-bucket
+TF_VAR_state_dynamodb_table	?= $(TF_VAR_project)-state-table
 
 export
 
@@ -40,3 +40,6 @@ destroy:
 
 output: 
 	cd infrastructure/$(layer) && terraform output
+
+format:
+	cd infrastructure/$(layer) && terraform fmt
