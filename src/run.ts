@@ -5,7 +5,12 @@ const start = 'start' as string;
 
 console.log(start);
 
-const client = new Client({});
+const client = new Client({
+  qrMaxRetries: 10,
+  puppeteer: {
+    args: ['--no-sandbox'],
+  },
+});
 
 client.on('ready', () => {
   console.log('Client is ready!');

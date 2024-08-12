@@ -1,4 +1,20 @@
-#Build stage
+# Puppeteer base image setup
+FROM node:20-alpine AS base
+
+RUN apk add --no-cache \
+      chromium \
+      nss \
+      freetype \
+      freetype-dev \
+      harfbuzz \
+      ca-certificates \
+      ttf-freefont
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+
+ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
+
+# Build stage
 FROM node:20-alpine AS build
 
 WORKDIR /app
@@ -13,54 +29,16 @@ COPY tsconfig.json ./tsconfig.json
 
 RUN npm run build
 
-#Production stage
-# FROM ghcr.io/puppeteer/puppeteer:20.1.0 AS production
-# FROM node:20-alpine AS production
-
-FROM node:slim AS production
-
-# We don't need the standalone Chromium
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
-# Install Google Chrome Stable and fonts
-# Note: this installs the necessary libs to make the browser work with Puppeteer.
-RUN apt-get update && apt-get install curl gnupg -y \
-  && curl --location --silent https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-  && apt-get update \
-  && apt-get install google-chrome-stable -y --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/*
-
-# RUN apk add --no-cache udev ttf-freefont chromium
-
-# ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+# Production stage
+FROM base
 
 COPY package*.json ./
 
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 COPY --from=build /app/dist ./dist
 
 CMD ["node", "dist/run.js"]
 
-# docker build . --tag=whatsapp , docker run whatsapp 
-
-
-
-# https://stackoverflow.com/questions/50662388/running-headless-chrome-puppeteer-with-no-sandbox
-
-
-# ARG USER=default
-# ENV HOME /home/$USER
-
-# # install sudo as root
-# RUN apk add --update sudo
-
-# # add new user
-# RUN adduser -D $USER \
-#     && echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER \
-#     && chmod 0440 /etc/sudoers.d/$USER
-
-
-# USER $USER
-# WORKDIR $HOME
+# docker build . --tag=whatsapp , docker run whatsapp
+ 
