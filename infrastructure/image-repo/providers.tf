@@ -4,7 +4,7 @@ provider "aws" {
   default_tags {
     tags = {
       Project = var.project
-      Stack   = "whatsapp-converter-service"
+      Stack   = "image-repo"
     }
   }
 }

@@ -51,27 +51,27 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.whatsapp_converter_task_execution_role.arn
 
-  container_definitions = <<EOF
-  [
-    {
-      "name": "${var.project}",
-      "image": "${var.container_image}",
-      "portMappings": [
-        {
-          "containerPort": ${var.container_port}
-        }
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-region": "${var.region}",
-          "awslogs-group": "/ecs/${var.project}",
-          "awslogs-stream-prefix": "ecs"
+  container_definitions = jsonencode(
+    [
+      {
+        "name" : var.project,
+        "image" : var.container_image,
+        "portMappings" : [
+          {
+            "containerPort" : var.container_port
+          }
+        ],
+        "logConfiguration" : {
+          "logDriver" : "awslogs",
+          "options" : {
+            "awslogs-region" : var.region,
+            "awslogs-group" : "/ecs/${var.project}",
+            "awslogs-stream-prefix" : "ecs"
+          }
         }
       }
-    }
-  ]
-  EOF
+    ]
+  )
 }
 
 output "default_subnet_ips" {
@@ -98,8 +98,3 @@ output "default_subnet_ips" {
 # https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/build-and-push-docker-images-to-amazon-ecr-using-github-actions-and-terraform.html
 
 # https://earthly.dev/blog/deploy-dockcontainers-to-awsecs-using-terraform/
-
-
-# https://stackoverflow.com/questions/51083134/how-to-compile-typescript-in-dockerfile
-# https://www.emmanuelgautier.com/blog/snippets/typescript-dockerfile
-# https://chinwendu.medium.com/how-to-dockerize-your-typescript-application-with-multi-stage-build-a-step-by-step-guide-56e7c4274088
