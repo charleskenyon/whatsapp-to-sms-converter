@@ -1,1 +1,1 @@
-untagged_images = "5"
+untagged_images = "3"

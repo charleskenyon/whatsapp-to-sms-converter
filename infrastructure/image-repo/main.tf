@@ -21,7 +21,7 @@ resource "aws_ecr_lifecycle_policy" "default_policy" {
         "selection" : {
           "tagStatus" : "untagged",
           "countType" : "imageCountMoreThan",
-          "countNumber" : var.untagged_images
+          "countNumber" : tonumber(var.untagged_images)
         },
         "action" : {
           "type" : "expire"
@@ -29,4 +29,9 @@ resource "aws_ecr_lifecycle_policy" "default_policy" {
       }
     ]
   })
+}
+
+output "image_url_latest" {
+  value       = "${aws_ecr_repository.whatsapp_converter_image_respository.repository_url}:latest"
+  description = "The latest whatsapp converter service image url"
 }

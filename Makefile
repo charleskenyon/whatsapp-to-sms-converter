@@ -1,5 +1,4 @@
-all: init plan format
-# all: init plan apply
+all: init validate plan format
 
 layer						?= whatsapp-converter-service
 
@@ -33,7 +32,7 @@ plan:
 		-out /tmp/plan;
 
 apply: 
-	cd infrastructure/$(layer) && terraform apply 
+	cd infrastructure/$(layer) && terraform apply -auto-approve
 
 destroy: 
 	cd infrastructure/$(layer) && terraform destroy

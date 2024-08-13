@@ -13,6 +13,16 @@ data "aws_subnets" "default" {
   }
 }
 
+data "terraform_remote_state" "image_repo" {
+  backend = "s3"
+
+  config = {
+    bucket = var.state_bucket
+    region = var.region
+    key    = "image-repo/terraform.tfstate"
+  }
+}
+
 resource "aws_ecs_cluster" "cluster" {
   name = "${var.project}-cluster"
 }
@@ -21,12 +31,12 @@ resource "aws_ecs_service" "whatsapp_converter_service" {
   name            = "${var.project}-service"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.whatsapp_converter_task_definition.arn
-  desired_count   = 0
+  desired_count   = 1
   launch_type     = "FARGATE"
 
   network_configuration {
     subnets          = data.aws_subnets.default.ids
-    assign_public_ip = true # add VPC endpoint (to pull container image)
+    assign_public_ip = false
     security_groups = [
       aws_security_group.whatsapp_converter_sg_backend.id,
     ]
@@ -55,7 +65,7 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
     [
       {
         "name" : var.project,
-        "image" : var.container_image,
+        "image" : data.terraform_remote_state.image_repo.outputs.image_url_latest,
         "portMappings" : [
           {
             "containerPort" : var.container_port
@@ -77,6 +87,10 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
 output "default_subnet_ips" {
   value       = data.aws_subnets.default.ids
   description = "default subnet ips"
+}
+
+output "image" {
+  value = data.terraform_remote_state.image_repo.outputs.image_url_latest
 }
 
 # https://section411.com/2019/07/hello-world/
