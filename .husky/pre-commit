@@ -1,0 +1,7 @@
+# enforce newline
+FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+for FILE in $FILES; do
+    sed -i -e '$a\' $FILE
+    git add "$FILE"
+done

@@ -9,7 +9,6 @@ variable "project" {
 }
 
 variable "untagged_images" {
-  description = "The amount of untagged images to allow"
+  description = "The amount of untagged images to store in ecr before removing oldest"
   type        = string
 }
-
