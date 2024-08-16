@@ -19,3 +19,8 @@ variable "container_image" {
   type        = string
   default     = "nginxdemos/hello"
 }
+
+variable "state_bucket" {
+  description = "The S3 state bucket name."
+  type        = string
+}

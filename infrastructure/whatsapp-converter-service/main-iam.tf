@@ -3,7 +3,7 @@ resource "aws_iam_role" "whatsapp_converter_task_execution_role" {
   assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role.json
 }
 
-data "aws_iam_policy_document" "ecs_task_assume_role" {
+data "aws_iam_policy_document" "ecs_task_assume_role_policy_document" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -21,4 +21,30 @@ data "aws_iam_policy" "ecs_task_execution_role_policy" {
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role" {
   role       = aws_iam_role.whatsapp_converter_task_execution_role.name
   policy_arn = data.aws_iam_policy.ecs_task_execution_role_policy.arn
+}
+
+resource "aws_iam_role" "whatsapp_converter_task_role" {
+  name               = "${var.project}-task-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role.json
+}
+
+resource "aws_iam_policy" "whatsapp_converter_task_role_policy" {
+  name = "${var.project}-task-role-policy"
+
+  policy = data.aws_iam_policy_document.whatsapp_converter_task_role_policy_document.json
+}
+
+data "aws_iam_policy_document" "whatsapp_converter_task_role_policy_document" {
+  statement {
+    actions = ["s3:PutObject"]
+
+    resources = [
+      "${aws_s3_bucket.whatsapp_media_bucket.arn}/*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_role" {
+  role       = aws_iam_role.whatsapp_converter_task_role.name
+  policy_arn = aws_iam_policy.whatsapp_converter_task_role_policy.arn
 }

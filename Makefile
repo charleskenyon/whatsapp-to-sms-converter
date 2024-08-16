@@ -1,4 +1,4 @@
-all: init validate plan format
+all: format init validate plan
 
 layer						?= whatsapp-converter-service
 

@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "ts-node --project ./tsconfig.json --files src/run.ts",
     "build": "rimraf ./dist && tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

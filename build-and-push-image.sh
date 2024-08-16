@@ -1,3 +1,5 @@
+#!/bin/bash
+
 REGION="eu-west-2"
 REPO_NAME="whatsapp-to-sms-converter"
 IMAGE_NAME=$REPO_NAME
