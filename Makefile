@@ -28,8 +28,7 @@ validate:
 	cd infrastructure/$(layer) && terraform validate
 
 plan: 
-	cd infrastructure/$(layer) && terraform plan \
-		-out /tmp/plan;
+	cd infrastructure/$(layer) && terraform plan
 
 apply: 
 	cd infrastructure/$(layer) && terraform apply -auto-approve

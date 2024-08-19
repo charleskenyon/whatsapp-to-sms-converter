@@ -31,7 +31,7 @@ resource "aws_ecs_service" "whatsapp_converter_service" {
   name            = "${var.project}-service"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.whatsapp_converter_task_definition.arn
-  desired_count   = 1
+  desired_count   = 0
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -79,7 +79,17 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
             "awslogs-group" : "/ecs/${var.project}",
             "awslogs-stream-prefix" : "ecs"
           }
-        }
+        },
+        "environment" : [
+          {
+            name  = "WHATSAPP_MEDIA_BUCKET"
+            value = aws_s3_bucket.whatsapp_media_bucket.id
+          },
+          {
+            name  = "AWS_REGION"
+            value = var.region
+          }
+        ]
       }
     ]
   )

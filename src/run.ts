@@ -1,5 +1,5 @@
 import { Client } from 'whatsapp-web.js';
-import * as qrcode from 'qrcode-terminal';
+import { qrHandler } from './event-handlers';
 
 const start = 'start' as string;
 
@@ -16,10 +16,7 @@ client.on('ready', () => {
   console.log('Client is ready!');
 });
 
-client.on('qr', (qr) => {
-  console.log('qr', qr);
-  qrcode.generate(qr, { small: true });
-});
+client.on('qr', qrHandler);
 
 // Listening to all incoming messages
 client.on('message_create', (message) => {

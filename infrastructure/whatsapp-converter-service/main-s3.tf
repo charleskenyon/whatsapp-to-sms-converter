@@ -2,7 +2,7 @@ resource "aws_s3_bucket" "whatsapp_media_bucket" {
   bucket = "${var.project}-media"
 }
 
-resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_rule" {
+resource "aws_s3_bucket_lifecycle_configuration" "whatsapp_media_bucket_lifecycle_rule" {
   bucket = aws_s3_bucket.whatsapp_media_bucket.bucket
 
   rule {
