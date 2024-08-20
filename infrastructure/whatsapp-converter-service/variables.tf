@@ -24,3 +24,8 @@ variable "state_bucket" {
   description = "The S3 state bucket name."
   type        = string
 }
+
+variable "number" {
+  description = "The phone number to send sms messaged to."
+  type        = string
+}

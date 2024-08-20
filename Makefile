@@ -9,6 +9,8 @@ TF_VAR_region				= $(AWS_DEFAULT_REGION)
 TF_VAR_state_bucket        	?= $(TF_VAR_project)-state-bucket
 TF_VAR_state_dynamodb_table	?= $(TF_VAR_project)-state-table
 
+include .env
+
 export
 
 # check-var-%:

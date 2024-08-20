@@ -86,6 +86,10 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
             value = aws_s3_bucket.whatsapp_media_bucket.id
           },
           {
+            name  = "WHATSAPP_SNS_SMS_TOPIC_ARN",
+            value = aws_sns_topic.whatsapp_sms_topic.arn
+          },
+          {
             name  = "AWS_REGION"
             value = var.region
           }
