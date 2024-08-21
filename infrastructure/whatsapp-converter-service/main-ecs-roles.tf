@@ -36,7 +36,7 @@ resource "aws_iam_role_policy" "whatsapp_converter_task_role_policy" {
 
 data "aws_iam_policy_document" "whatsapp_converter_task_role_policy_document" {
   statement {
-    actions = ["s3:PutObject"]
+    actions = ["s3:GetObject", "s3:PutObject"]
     resources = [
       "${aws_s3_bucket.whatsapp_media_bucket.arn}/*"
     ]

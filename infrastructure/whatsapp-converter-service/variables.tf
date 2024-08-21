@@ -25,7 +25,7 @@ variable "state_bucket" {
   type        = string
 }
 
-variable "number" {
-  description = "The phone number to send sms messaged to."
+variable "email" {
+  description = "The email to send messages to."
   type        = string
 }

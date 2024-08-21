@@ -30,7 +30,7 @@ validate:
 	cd infrastructure/$(layer) && terraform validate
 
 plan: 
-	cd infrastructure/$(layer) && terraform plan
+	cd infrastructure/$(layer) && terraform plan -input=false
 
 apply: 
 	cd infrastructure/$(layer) && terraform apply -auto-approve
