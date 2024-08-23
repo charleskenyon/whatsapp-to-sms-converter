@@ -1,17 +1,13 @@
 import { PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-// import { PublishCommand } from '@aws-sdk/client-sns';
 import qrImage from 'qr-image';
-import Twilio from 'twilio';
 import {
   AWS,
   WHATSAPP_MEDIA_BUCKET,
-  // WHATSAPP_SNS_SMS_TOPIC_ARN,
+  TWILIO_NUMBER,
+  twilioClient,
+  RECEIVING_PHONE_NUMBER,
 } from '../constants';
-
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = new (Twilio as any)(accountSid, authToken);
 
 const qrHandler = async (qr: string) => {
   console.log('qr', qr);
@@ -41,23 +37,13 @@ const qrHandler = async (qr: string) => {
     }
   );
 
-  // const snsResponse = await AWS.snsClient.send(
-  //   new PublishCommand({
-  //     // TopicArn: WHATSAPP_SNS_SMS_TOPIC_ARN,
-  //     TopicArn:
-  //       'arn:aws:sns:eu-west-2:493527389854:whatsapp-to-sms-converter-sns-sms-topic',
-  //     Message: `QR: ${signedUrl}`,
-  //     Subject: 'whatsapp-to-sms-converter',
-  //   })
-  // );
-
   console.log('response', s3Response, signedUrl);
   // console.log('snsResponse', snsResponse);
 
-  const message = await client.messages.create({
+  const message = await twilioClient.messages.create({
     body: `QR: ${signedUrl}`, // The message body
-    from: process.env.TWILIO_NUMBER, // Replace with your Twilio number
-    to: process.env.PHONE_NUMBER, // Replace with the recipient's phone number (E.164 format)
+    from: TWILIO_NUMBER, // Replace with your Twilio number
+    to: RECEIVING_PHONE_NUMBER, // Replace with the recipient's phone number (E.164 format)
   });
 
   console.log('message', message);
@@ -70,3 +56,9 @@ export default qrHandler;
 
 // docker run --rm -it -e AWS_REGION=eu-west-2 -e WHATSAPP_MEDIA_BUCKET=whatsapp-to-sms-converter-media -v ~/.aws:/root/.aws whatsapp
 // use Twilio
+
+// https://www.twilio.com/docs/serverless/functions-assets/quickstart/receive-sms#respond-with-mms-media-from-an-http-request
+// https://www.twilio.com/en-us/blog/how-to-receive-and-respond-to-a-text-message-with-node-js-express-and-twilio-html
+// https://medium.com/@adybagus/automated-reply-with-whatsapp-web-js-express-js-299eee4e57b1
+// twilio phone-numbers:update <your Twilio phone number> --sms-url "http://localhost:3000/sms-reply"
+// https://www.twilio.com/docs/twilio-cli/quickstart

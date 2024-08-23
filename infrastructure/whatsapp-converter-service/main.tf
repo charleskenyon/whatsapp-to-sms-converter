@@ -42,6 +42,11 @@ resource "aws_ecs_service" "whatsapp_converter_service" {
     ]
   }
 
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT"
+    weight            = 1
+  }
+
   # load_balancer {
   #   target_group_arn = aws_lb_target_group.whatsapp_converter_alb_target_group.arn
   #   container_name   = var.project
