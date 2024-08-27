@@ -32,7 +32,6 @@ resource "aws_ecs_service" "whatsapp_converter_service" {
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.whatsapp_converter_task_definition.arn
   desired_count   = 0
-  launch_type     = "FARGATE"
 
   network_configuration {
     subnets          = data.aws_subnets.default.ids
@@ -89,10 +88,6 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
           {
             name  = "WHATSAPP_MEDIA_BUCKET"
             value = aws_s3_bucket.whatsapp_media_bucket.id
-          },
-          {
-            name  = "WHATSAPP_SNS_SMS_TOPIC_ARN",
-            value = aws_sns_topic.whatsapp_sms_topic.arn
           },
           {
             name  = "AWS_REGION"

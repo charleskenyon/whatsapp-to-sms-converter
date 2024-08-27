@@ -38,7 +38,12 @@ const qrHandler = async (qr: string) => {
   );
 
   console.log('response', s3Response, signedUrl);
-  // console.log('snsResponse', snsResponse);
+
+  console.log({
+    body: `QR: ${signedUrl}`,
+    from: TWILIO_NUMBER,
+    to: RECEIVING_PHONE_NUMBER,
+  });
 
   const message = await twilioClient.messages.create({
     body: `QR: ${signedUrl}`, // The message body
@@ -48,14 +53,11 @@ const qrHandler = async (qr: string) => {
 
   console.log('message', message);
 
-  throw new Error('broken');
-  // return response;
+  // throw new Error('broken');
+  return;
 };
 
 export default qrHandler;
-
-// docker run --rm -it -e AWS_REGION=eu-west-2 -e WHATSAPP_MEDIA_BUCKET=whatsapp-to-sms-converter-media -v ~/.aws:/root/.aws whatsapp
-// use Twilio
 
 // https://www.twilio.com/docs/serverless/functions-assets/quickstart/receive-sms#respond-with-mms-media-from-an-http-request
 // https://www.twilio.com/en-us/blog/how-to-receive-and-respond-to-a-text-message-with-node-js-express-and-twilio-html

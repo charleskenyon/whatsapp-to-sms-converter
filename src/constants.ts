@@ -1,3 +1,4 @@
+import express from 'express';
 import { Client } from 'whatsapp-web.js';
 import { S3Client } from '@aws-sdk/client-s3';
 import { SNSClient } from '@aws-sdk/client-sns';
@@ -29,6 +30,8 @@ const whatsappClient = new Client({
 
 const twilioClient = new (Twilio as any)(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
+const app = express();
+
 export {
   AWS,
   WHATSAPP_MEDIA_BUCKET,
@@ -37,4 +40,5 @@ export {
   RECEIVING_PHONE_NUMBER,
   whatsappClient,
   twilioClient,
+  app,
 };
