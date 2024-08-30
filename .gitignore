@@ -16,3 +16,4 @@ node_modules/
 .wwebjs_cache
 
 .env
+ngrok_log.json

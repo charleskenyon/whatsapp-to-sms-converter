@@ -4,6 +4,7 @@
   "description": "Software stack for converting whatsapp messages to sms messages. Requires AWS account and running fargate instance.",
   "scripts": {
     "dev": "ts-node --project ./tsconfig.json --files src/run.ts",
+    "dev-docker": "./local-setup-and-run.sh",
     "build": "rimraf ./dist && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

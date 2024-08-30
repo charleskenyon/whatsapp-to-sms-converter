@@ -64,3 +64,5 @@ export default qrHandler;
 // https://medium.com/@adybagus/automated-reply-with-whatsapp-web-js-express-js-299eee4e57b1
 // twilio phone-numbers:update <your Twilio phone number> --sms-url "http://localhost:3000/sms-reply"
 // https://www.twilio.com/docs/twilio-cli/quickstart
+// https://www.twilio.com/docs/messaging/tutorials/how-to-receive-and-reply/node-js
+// twilio phone-numbers:update "+447402542325" --sms-url="http://localhost:3000/sms" -l debug
