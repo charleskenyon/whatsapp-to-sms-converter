@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Software stack for converting whatsapp messages to sms messages. Requires AWS account and running fargate instance.",
   "scripts": {
-    "dev": "ts-node --project ./tsconfig.json --files src/run.ts",
-    "dev-docker": "./local-setup-and-run.sh",
+    "dev": "./local-setup-and-run.sh",
+    "dev-docker": "./local-setup-and-run.sh docker",
     "build": "rimraf ./dist && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,6 +24,7 @@
     "@types/qr-image": "^3.2.9",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
+    "dotenv": "^16.4.5",
     "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",

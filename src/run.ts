@@ -1,36 +1,23 @@
-import Twilio from 'twilio';
 import bodyParser from 'body-parser';
 import { whatsappClient, app } from './constants';
-// import { qrHandler } from './event-handlers';
+import { qrHandler, smsResponseHandler } from './handlers';
 
-const start = 'start' as string;
+whatsappClient.on('ready', () => console.log('Client is ready!'));
 
-console.log(start);
-
-whatsappClient.on('ready', () => {
-  console.log('Client is ready!');
-});
-
-// whatsappClient.on('qr', qrHandler);
+whatsappClient.on('qr', qrHandler);
 
 whatsappClient.on('message_create', (message) => {
   console.log('message_create', message.body);
 });
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.post(
+  '/sms',
+  bodyParser.urlencoded({ extended: false }),
+  smsResponseHandler
+);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-app.post('/sms', (req, res) => {
-  const {
-    body: { Body: messageResponse },
-  } = req;
-  console.log('message response: ', messageResponse);
-
-  const twiml = new Twilio.twiml.MessagingResponse();
-  res.type('text/xml').send(twiml.toString());
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'UP' });
 });
 
 whatsappClient.initialize();
