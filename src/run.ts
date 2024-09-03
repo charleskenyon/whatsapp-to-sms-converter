@@ -1,14 +1,14 @@
 import bodyParser from 'body-parser';
 import { whatsappClient, app } from './constants';
-import { qrHandler, smsResponseHandler } from './handlers';
+import { qrHandler, messageHandler, smsResponseHandler } from './handlers';
 
-whatsappClient.on('ready', () => console.log('Client is ready!'));
+whatsappClient.on('ready', () => console.log('Whatsapp client is ready!'));
 
 whatsappClient.on('qr', qrHandler);
 
-whatsappClient.on('message_create', (message) => {
-  console.log('message_create', message.body);
-});
+whatsappClient.on('message_create', messageHandler);
+
+whatsappClient.initialize();
 
 app.post(
   '/sms',
@@ -19,8 +19,6 @@ app.post(
 app.get('/health', (_req, res) => {
   res.status(200).json({ status: 'UP' });
 });
-
-whatsappClient.initialize();
 
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');

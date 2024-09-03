@@ -22,5 +22,5 @@ if [ "$1" == "docker" ]; then
     docker build --tag=whatsapp .
     docker run --rm -it -p 3000:3000 --env-file=.env -v ~/.aws:/root/.aws whatsapp
 else
-    ts-node -r dotenv/config --project ./tsconfig.json --files src/run.ts
+    nodemon --exec ts-node -r dotenv/config --project ./tsconfig.json --ext "ts" src/run.ts
 fi

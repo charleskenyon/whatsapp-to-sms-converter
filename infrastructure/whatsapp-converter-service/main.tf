@@ -127,3 +127,6 @@ output "image" {
 # https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/build-and-push-docker-images-to-amazon-ecr-using-github-actions-and-terraform.html
 
 # https://earthly.dev/blog/deploy-dockcontainers-to-awsecs-using-terraform/
+
+
+# split in ecs, api gateway (cloudmap) moudules

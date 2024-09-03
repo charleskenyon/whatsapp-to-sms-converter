@@ -6,6 +6,7 @@ const qrHandler = async (qr: string) => {
   const image = qrImage.imageSync(qr, { type: 'png' });
   await uploadImageS3({ key: s3key, image });
   const signedQrUrl = await generatePresignedUrl(s3key);
+  console.log('signedQrUrl', signedQrUrl);
   await twilioMessage(`QR: ${signedQrUrl}`);
   return;
 };
