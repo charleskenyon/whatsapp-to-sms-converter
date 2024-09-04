@@ -27,7 +27,7 @@ resource "aws_ecs_cluster" "cluster" {
   name = "${var.project}-cluster"
 }
 
-resource "aws_ecs_service" "whatsapp_converter_service" {
+resource "aws_ecs_ser  console.log('message', message);vice" "whatsapp_converter_service" {
   name            = "${var.project}-service"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.whatsapp_converter_task_definition.arn

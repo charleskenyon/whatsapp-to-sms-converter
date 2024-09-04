@@ -1,6 +1,7 @@
 #!/bin/bash
 
-REGION="eu-west-2"
+source .env
+
 REPO_NAME="whatsapp-to-sms-converter"
 IMAGE_NAME=$REPO_NAME
 TAG="latest"

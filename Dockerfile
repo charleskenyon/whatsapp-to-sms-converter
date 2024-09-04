@@ -39,6 +39,3 @@ RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 
 CMD ["node", "dist/run.js"]
-
-# docker build . --tag=whatsapp , docker run --rm -it whatsapp
- 

@@ -1,18 +1,14 @@
 import WAWebJS from 'whatsapp-web.js';
 import { twilioMessage } from '../utils';
-import { cache } from '../constants';
+import { whatsappClient, cache } from '../constants';
 
-const messageHandler = (
-  message: WAWebJS.Message & { _data: { notifyName: string } }
-) => {
-  const {
-    body,
-    from,
-    _data: { notifyName },
-  } = message;
-
-  twilioMessage(`<${notifyName}> ${body}`);
-  cache.set(notifyName, from);
+const messageHandler = async (message: WAWebJS.Message) => {
+  console.log('message', message);
+  const { body, from } = message;
+  const { name } = await whatsappClient.getContactById(from);
+  console.log('name', name);
+  await twilioMessage(`<${name}> ${body}`);
+  cache.set(name, from);
 };
 
 export default messageHandler;

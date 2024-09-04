@@ -30,6 +30,10 @@ resource "aws_ecr_lifecycle_policy" "default_policy" {
     ]
   })
 }
+output "repository_url" {
+  value       = aws_ecr_repository.whatsapp_converter_image_respository.repository_url
+  description = "The ECR repository url"
+}
 
 output "image_url_latest" {
   value       = "${aws_ecr_repository.whatsapp_converter_image_respository.repository_url}:latest"
