@@ -27,7 +27,7 @@ resource "aws_ecs_cluster" "cluster" {
   name = "${var.project}-cluster"
 }
 
-resource "aws_ecs_ser  console.log('message', message);vice" "whatsapp_converter_service" {
+resource "aws_ecs_service" "whatsapp_converter_service" {
   name            = "${var.project}-service"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.whatsapp_converter_task_definition.arn
@@ -35,7 +35,7 @@ resource "aws_ecs_ser  console.log('message', message);vice" "whatsapp_converter
 
   network_configuration {
     subnets          = data.aws_subnets.default.ids
-    assign_public_ip = false
+    assign_public_ip = true
     security_groups = [
       aws_security_group.whatsapp_converter_sg_backend.id,
     ]
@@ -99,13 +99,12 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
   )
 }
 
-output "default_subnet_ips" {
-  value       = data.aws_subnets.default.ids
-  description = "default subnet ips"
-}
+module "api" {
+  source = "../../modules/api-gateway"
 
-output "image" {
-  value = data.terraform_remote_state.image_repo.outputs.image_url_latest
+  service_name = "${var.project}-api"
+  uri          = "http://${aws_ecs_service.whatsapp_converter_service.network_configuration[0].assign_public_ip}:${var.container_port}"
+  region       = var.region
 }
 
 # https://section411.com/2019/07/hello-world/
