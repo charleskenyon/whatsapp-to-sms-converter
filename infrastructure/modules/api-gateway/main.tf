@@ -20,7 +20,7 @@ resource "aws_api_gateway_integration" "proxy_integration" {
   resource_id = aws_api_gateway_resource.proxy.id
   http_method = aws_api_gateway_method.proxy_method.http_method
   integration_http_method = "ANY"
-  type        = "HTTP"
+  type        = "HTTP_PROXY"
   uri         = var.uri
 }
 

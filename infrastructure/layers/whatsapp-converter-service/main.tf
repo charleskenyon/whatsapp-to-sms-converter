@@ -51,6 +51,10 @@ resource "aws_ecs_service" "whatsapp_converter_service" {
   #   container_name   = var.project
   #   container_port   = var.container_port
   # }
+
+  service_registries {
+    registry_arn = module.cloudmap.service_discovery_service_arn
+  }
 }
 
 resource "aws_cloudwatch_log_group" "whatsapp_converter_log_group" {
@@ -99,11 +103,17 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
   )
 }
 
+module "cloudmap" {
+  source = "../../modules/cloudmap"
+
+  service_name = var.project
+}
+
 module "api" {
   source = "../../modules/api-gateway"
 
   service_name = "${var.project}-api"
-  uri          = "http://${aws_ecs_service.whatsapp_converter_service.network_configuration[0].assign_public_ip}:${var.container_port}"
+  uri          = "http://${module.cloudmap.service_discovery_name}.${module.cloudmap.service_discovery_dns_namespace}"
   region       = var.region
 }
 
@@ -129,3 +139,34 @@ module "api" {
 
 
 # split in ecs, api gateway (cloudmap) moudules
+
+
+
+
+# in ecs sevice
+# service_registries {
+#     registry_arn = aws_service_discovery_service.example_service_discovery.arn
+#   }
+
+# resource "aws_service_discovery_private_dns_namespace" "example_namespace" {
+#   name        = "example.com"
+#   vpc         = aws_vpc.example_vpc.id
+#   description = "Example namespace"
+# }
+
+
+# resource "aws_service_discovery_service" "example_service_discovery" {
+#   name = "example-service"
+
+#   dns_config {
+#     namespace_id = aws_service_discovery_private_dns_namespace.example_namespace.id
+#     dns_records {
+#       type = "A"
+#       ttl  = 60
+#     }
+#   }
+
+#   health_check_custom_config {
+#     failure_threshold = 1
+#   }
+# }
