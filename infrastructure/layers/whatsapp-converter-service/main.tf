@@ -23,54 +23,38 @@ data "terraform_remote_state" "image_repo" {
   }
 }
 
-resource "aws_ecs_cluster" "cluster" {
-  name = "${var.project}-cluster"
+locals {
+  log_group_prefix = "/ecs/${var.project}"
 }
 
-resource "aws_ecs_service" "whatsapp_converter_service" {
-  name            = "${var.project}-service"
-  cluster         = aws_ecs_cluster.cluster.id
-  task_definition = aws_ecs_task_definition.whatsapp_converter_task_definition.arn
-  desired_count   = 0
+module "cloudmap" {
+  source = "../../modules/cloudmap"
 
-  network_configuration {
-    subnets          = data.aws_subnets.default.ids
-    assign_public_ip = true
-    security_groups = [
-      aws_security_group.whatsapp_converter_sg_backend.id,
-    ]
-  }
-
-  capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT"
-    weight            = 1
-  }
-
-  # load_balancer {
-  #   target_group_arn = aws_lb_target_group.whatsapp_converter_alb_target_group.arn
-  #   container_name   = var.project
-  #   container_port   = var.container_port
-  # }
-
-  service_registries {
-    registry_arn = module.cloudmap.service_discovery_service_arn
-  }
+  service_name = var.project
 }
 
-resource "aws_cloudwatch_log_group" "whatsapp_converter_log_group" {
-  name = "/ecs/${var.project}"
+module "api" {
+  source = "../../modules/api-gateway"
+
+  service_name = "${var.project}-api"
+  uri          = "http://${module.cloudmap.service_discovery_name}.${module.cloudmap.service_discovery_dns_namespace}"
+  region       = var.region
 }
 
-resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
-  family                   = var.project
-  cpu                      = 256
-  memory                   = 512
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  execution_role_arn       = aws_iam_role.whatsapp_converter_task_execution_role.arn
-  task_role_arn            = aws_iam_role.whatsapp_converter_task_role.arn
+module "fargate_cluster" {
+  source = "../../modules/fargate-cluster"
 
-  container_definitions = jsonencode(
+  project                        = var.project
+  vpc_id                         = data.aws_vpc.default.id
+  subnet_ids                     = data.aws_subnets.default.ids
+  container_port                 = 80
+  enable_spot                    = true
+  cloudmap_service_discovery_arn = module.cloudmap.service_discovery_service_arn
+  desired_count                  = 0
+  execution_role_arn             = aws_iam_role.whatsapp_converter_task_execution_role.arn
+  task_role_arn                  = aws_iam_role.whatsapp_converter_task_role.arn
+  cloudwatch_log_group_prefix    = local.log_group_prefix
+  container_definition = jsonencode(
     [
       {
         "name" : var.project,
@@ -84,7 +68,7 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
           "logDriver" : "awslogs",
           "options" : {
             "awslogs-region" : var.region,
-            "awslogs-group" : "/ecs/${var.project}",
+            "awslogs-group" : local.log_group_prefix,
             "awslogs-stream-prefix" : "ecs"
           }
         },
@@ -101,20 +85,6 @@ resource "aws_ecs_task_definition" "whatsapp_converter_task_definition" {
       }
     ]
   )
-}
-
-module "cloudmap" {
-  source = "../../modules/cloudmap"
-
-  service_name = var.project
-}
-
-module "api" {
-  source = "../../modules/api-gateway"
-
-  service_name = "${var.project}-api"
-  uri          = "http://${module.cloudmap.service_discovery_name}.${module.cloudmap.service_discovery_dns_namespace}"
-  region       = var.region
 }
 
 # https://section411.com/2019/07/hello-world/
