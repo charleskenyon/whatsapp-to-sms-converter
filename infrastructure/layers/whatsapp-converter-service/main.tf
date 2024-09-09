@@ -140,33 +140,3 @@ module "api" {
 
 # split in ecs, api gateway (cloudmap) moudules
 
-
-
-
-# in ecs sevice
-# service_registries {
-#     registry_arn = aws_service_discovery_service.example_service_discovery.arn
-#   }
-
-# resource "aws_service_discovery_private_dns_namespace" "example_namespace" {
-#   name        = "example.com"
-#   vpc         = aws_vpc.example_vpc.id
-#   description = "Example namespace"
-# }
-
-
-# resource "aws_service_discovery_service" "example_service_discovery" {
-#   name = "example-service"
-
-#   dns_config {
-#     namespace_id = aws_service_discovery_private_dns_namespace.example_namespace.id
-#     dns_records {
-#       type = "A"
-#       ttl  = 60
-#     }
-#   }
-
-#   health_check_custom_config {
-#     failure_threshold = 1
-#   }
-# }
