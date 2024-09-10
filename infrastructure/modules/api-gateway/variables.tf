@@ -8,7 +8,17 @@ variable "service_name" {
   type        = string
 }
 
-variable "uri" {
-  description = "The uri used in the api gateway service integration"
+variable "vpc_id" {
+  description = "The id of the vpc in which to deploy the ALB."
+  type        = string
+}
+
+variable "subnet_ids" {
+  description = "The ids of the subnets in which to deploy the ALB."
+  type        = list(string)
+}
+
+variable "service_discovery_service_arn" {
+  description = "The Cloud Map service ARN."
   type        = string
 }

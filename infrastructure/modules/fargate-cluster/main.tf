@@ -52,7 +52,7 @@ resource "aws_ecs_task_definition" "example_task_definition" {
   memory                   = 512
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  execution_role_arn       = var.load_balancer_target_group_arn
+  execution_role_arn       = var.execution_role_arn
   task_role_arn            = var.task_role_arn
 
   container_definitions = var.container_definition
@@ -61,7 +61,6 @@ resource "aws_ecs_task_definition" "example_task_definition" {
 resource "aws_security_group" "example_container_security_group" {
   name   = "${var.project}-service-security-group"
   vpc_id = var.vpc_id
-
   ingress {
     from_port       = var.container_port
     to_port         = var.container_port

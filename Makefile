@@ -1,4 +1,4 @@
-all: format init validate plan
+all: init validate plan
 
 layer						?= whatsapp-converter-service
 
@@ -30,7 +30,8 @@ validate:
 	cd infrastructure/layers/$(layer) && terraform validate
 
 plan: 
-	cd infrastructure/layers/$(layer) && terraform plan -input=false
+	cd infrastructure/layers/$(layer) && terraform plan -input=false \
+		-out /tmp/plan;
 
 apply: 
 	cd infrastructure/layers/$(layer) && terraform apply -auto-approve
