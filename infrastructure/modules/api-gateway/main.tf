@@ -81,17 +81,32 @@ resource "aws_apigatewayv2_stage" "example_stage" {
   api_id      = aws_apigatewayv2_api.example_api.id
   auto_deploy = true
   name        = "prod"
+
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.example_log_group.arn
+    format = jsonencode({
+      requestId = "$context.requestId",
+      ip        = "$context.identity.sourceIp",
+      method    = "$context.httpMethod",
+      routeKey  = "$context.routeKey",
+      status    = "$context.status",
+      latency   = "$context.integration.latency"
+    })
+  }
+
+  default_route_settings {
+    data_trace_enabled       = true
+    detailed_metrics_enabled = true
+    logging_level            = "INFO"
+    throttling_rate_limit    = 50
+    throttling_burst_limit   = 100
+  }
 }
 
+resource "aws_cloudwatch_log_group" "example_log_group" {
+  name              = "/aws/apigateway/${var.service_name}"
+  retention_in_days = 1
+}
 
-# resource "aws_subnet" "private_subnet" {
-#   vpc_id                  = aws_vpc.vpc.id
-#   cidr_block              = "10.0.1.0/24"
-#   availability_zone       = "us-east-1a"
-#   map_public_ip_on_launch = false
-#   tags = {
-#     Name = "private-subnet"
-#   }
-# }
-
-# create private subnet
+# generate certificate and verify in express that connections only come from api gateway
+# https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-client-side-ssl-authentication.html

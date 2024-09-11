@@ -49,3 +49,17 @@ export {
   app,
   cache,
 };
+
+// ssl explained
+
+// const options = {
+// key: fs.readFileSync('server-key.pem'),
+// cert: fs.readFileSync('server-cert.pem'),
+// ca: fs.readFileSync('apig-cert.pem'),
+// requestCert: true,
+// rejectUnauthorized: true
+// };
+
+// https.createServer(options, app).listen(443, () => {
+//   console.log('Server running on port 443');
+// });

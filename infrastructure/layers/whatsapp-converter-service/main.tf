@@ -37,7 +37,7 @@ module "api" {
   source = "../../modules/api-gateway"
 
   service_name                  = "${var.project}-api"
-  service_discovery_service_arn = "http://${module.cloudmap.service_discovery_name}.${module.cloudmap.service_discovery_dns_namespace}/{proxy}"
+  service_discovery_service_arn = module.cloudmap.service_discovery_service_arn
   region                        = var.region
   subnet_ids                    = data.aws_subnets.default.ids
   vpc_id                        = data.aws_vpc.default.id
@@ -56,6 +56,8 @@ module "fargate_cluster" {
   execution_role_arn             = aws_iam_role.whatsapp_converter_task_execution_role.arn
   task_role_arn                  = aws_iam_role.whatsapp_converter_task_role.arn
   cloudwatch_log_group_prefix    = local.log_group_prefix
+  # - SourceSecurityGroupId: !ImportValue VpcLinkSecurityGroup
+
   container_definition = jsonencode(
     [
       {
@@ -110,26 +112,3 @@ module "fargate_cluster" {
 # https://earthly.dev/blog/deploy-dockcontainers-to-awsecs-using-terraform/
 
 
-# split in ecs, api gateway (cloudmap) moudules
-
-# Create a new route table for the private subnet
-# resource "aws_route_table" "private_rt" {
-#   vpc_id = data.aws_vpc.default.id
-
-#   tags = {
-#     Name = "private-route-table"
-#   }
-# }
-
-# # Create a private subnet
-# resource "aws_subnet" "private_subnet" {
-#   vpc_id                  = data.aws_vpc.default.id
-#   cidr_block              = "10.0.1.0/24"  # Change this CIDR block as needed
-#   availability_zone       = "us-east-1a"   # Change to your preferred availability zone
-#   map_public_ip_on_launch = false
-#   route_table_id          = aws_route_table.private_rt.id
-
-#   tags = {
-#     Name = "private-subnet"
-#   }
-# }
