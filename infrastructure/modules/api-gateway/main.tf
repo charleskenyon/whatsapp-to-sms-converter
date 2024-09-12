@@ -73,29 +73,32 @@ resource "aws_apigatewayv2_integration" "example_integration" {
 # Define a route for the API Gateway
 resource "aws_apigatewayv2_route" "example_route" {
   api_id    = aws_apigatewayv2_api.example_api.id
-  route_key = "ANY /{proxy+}"
+  route_key = "$default"
   target    = "integrations/${aws_apigatewayv2_integration.example_integration.id}"
 }
 
 resource "aws_apigatewayv2_stage" "example_stage" {
   api_id      = aws_apigatewayv2_api.example_api.id
   auto_deploy = true
-  name        = "prod"
+  name        = "$default"
 
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.example_log_group.arn
     format = jsonencode({
-      requestId = "$context.requestId",
-      ip        = "$context.identity.sourceIp",
-      method    = "$context.httpMethod",
-      routeKey  = "$context.routeKey",
-      status    = "$context.status",
-      latency   = "$context.integration.latency"
+      requestId        = "$context.requestId",
+      ip               = "$context.identity.sourceIp",
+      method           = "$context.httpMethod",
+      routeKey         = "$context.routeKey",
+      status           = "$context.status",
+      latency          = "$context.integration.latency"
+      error            = "$context.error.message"
+      integrationError = "$context.integration.integrationErrorMessage"
+      responseType     = "$context.error.responseType"
+      protocol         = "$context.protocol"
     })
   }
 
   default_route_settings {
-    data_trace_enabled       = true
     detailed_metrics_enabled = true
     logging_level            = "INFO"
     throttling_rate_limit    = 50

@@ -38,6 +38,7 @@ resource "aws_ecs_service" "example_ecs_service" {
     for_each = var.cloudmap_service_discovery_arn[*]
     content {
       registry_arn = var.cloudmap_service_discovery_arn
+      port         = var.container_port
     }
   }
 }
@@ -66,7 +67,7 @@ resource "aws_security_group" "example_container_security_group" {
     to_port         = var.container_port
     protocol        = "TCP"
     cidr_blocks     = ["0.0.0.0/0"]
-    security_groups = var.frontend_security_group_id[*]
+    security_groups = var.frontend_security_group_id != null ? [var.frontend_security_group_id] : []
   }
   egress {
     from_port   = 0

@@ -31,6 +31,7 @@ module "cloudmap" {
   source = "../../modules/cloudmap"
 
   service_name = var.project
+  record_type  = "SRV"
 }
 
 module "api" {
@@ -56,7 +57,7 @@ module "fargate_cluster" {
   execution_role_arn             = aws_iam_role.whatsapp_converter_task_execution_role.arn
   task_role_arn                  = aws_iam_role.whatsapp_converter_task_role.arn
   cloudwatch_log_group_prefix    = local.log_group_prefix
-  # - SourceSecurityGroupId: !ImportValue VpcLinkSecurityGroup
+  frontend_security_group_id     = module.api.vpc_link_sg_id
 
   container_definition = jsonencode(
     [
