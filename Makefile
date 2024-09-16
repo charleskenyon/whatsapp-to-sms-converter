@@ -1,22 +1,23 @@
 all: init validate plan
 
-layer						?= whatsapp-converter-service
-
-AWS_DEFAULT_REGION			?= eu-west-2
-
-TF_VAR_project            	?= whatsapp-to-sms-converter
-TF_VAR_region				= $(AWS_DEFAULT_REGION)
-TF_VAR_state_bucket        	?= $(TF_VAR_project)-state-bucket
-TF_VAR_state_dynamodb_table	?= $(TF_VAR_project)-state-table
-
 include .env
+
+layer							?= whatsapp-converter-service
+
+AWS_REGION						?= eu-west-2
+
+TF_VAR_project            		?= whatsapp-to-sms-converter
+TF_VAR_region					= $(AWS_REGION)
+TF_VAR_state_bucket        		?= $(TF_VAR_project)-state-bucket
+TF_VAR_state_dynamodb_table		?= $(TF_VAR_project)-state-table
+TF_VAR_receiving_phone_number 	?= ${RECEIVING_PHONE_NUMBER}
+TF_VAR_twilio_auth_token 		?= ${TWILIO_AUTH_TOKEN}
+TF_VAR_twilio_account_sid 		?= ${TWILIO_ACCOUNT_SID}
+TF_VAR_twilio_number 			?= ${TWILIO_NUMBER}
+TF_VAR_twilio_number_sid 		?= ${TWILIO_NUMBER_SID}
 
 export
 
-# check-var-%:
-# 	@ if [ "${${*}}" = "" ]; then echo "Environment variable $* not set"; exit 1; fi
-
-# init: check-var-env check-var-layer
 init:
 	cd infrastructure/layers/$(layer) && rm -rf .terraform/
 	cd infrastructure/layers/$(layer) && terraform init -backend=true \

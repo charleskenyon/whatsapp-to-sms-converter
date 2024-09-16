@@ -50,7 +50,7 @@ module "fargate_cluster" {
   project                        = var.project
   vpc_id                         = data.aws_vpc.default.id
   subnet_ids                     = data.aws_subnets.default.ids
-  container_port                 = 80
+  container_port                 = var.container_port
   enable_spot                    = true
   cloudmap_service_discovery_arn = module.cloudmap.service_discovery_service_arn
   desired_count                  = 1
@@ -63,7 +63,7 @@ module "fargate_cluster" {
     [
       {
         "name" : var.project,
-        "image" : var.container_image,
+        "image" : data.terraform_remote_state.image_repo.outputs.image_url_latest,
         "portMappings" : [
           {
             "containerPort" : var.container_port
@@ -79,12 +79,36 @@ module "fargate_cluster" {
         },
         "environment" : [
           {
+            name  = "AWS_REGION"
+            value = var.region
+          },
+          {
             name  = "WHATSAPP_MEDIA_BUCKET"
             value = aws_s3_bucket.whatsapp_media_bucket.id
           },
           {
-            name  = "AWS_REGION"
-            value = var.region
+            name  = "RECEIVING_PHONE_NUMBER"
+            value = var.receiving_phone_number
+          },
+          {
+            name  = "TWILIO_AUTH_TOKEN"
+            value = var.twilio_auth_token
+          },
+          {
+            name  = "TWILIO_ACCOUNT_SID"
+            value = var.twilio_account_sid
+          },
+          {
+            name  = "TWILIO_NUMBER"
+            value = var.twilio_number
+          },
+          {
+            name  = "TWILIO_NUMBER_SID"
+            value = var.twilio_number_sid
+          },
+          {
+            name  = "CONTAINER_PORT"
+            value = tostring(var.container_port)
           }
         ]
       }
@@ -92,24 +116,6 @@ module "fargate_cluster" {
   )
 }
 
-# https://section411.com/2019/07/hello-world/
-# "image": "hub.docker.com/r/nginxdemos/hello:latest",
-
-
-# https://github.com/Vad1mo/hello-world-rest/tree/master
-# "image": hello-world
-
-# https://github.com/joshbeard/terraform-ecs-hello-world/blob/master/ecs.tf
-
-// add load balancer
-
-# https://awsteele.com/blog/2022/10/15/cheap-serverless-containers-using-api-gateway.html
-
-
-# https://www.linkedin.com/pulse/how-upload-docker-images-aws-ecr-using-terraform-hendrix-roa
-
-# https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/build-and-push-docker-images-to-amazon-ecr-using-github-actions-and-terraform.html
-
-# https://earthly.dev/blog/deploy-dockcontainers-to-awsecs-using-terraform/
+// TODO: api gateway ssl cert, health checks
 
 
