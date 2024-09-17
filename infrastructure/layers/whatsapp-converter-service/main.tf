@@ -110,12 +110,15 @@ module "fargate_cluster" {
             name  = "CONTAINER_PORT"
             value = tostring(var.container_port)
           }
-        ]
+        ],
+        healthCheck = {
+          command      = ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
+          interval     = 30
+          timeout      = 5
+          retries      = 3
+          start_period = 0
+        }
       }
     ]
   )
 }
-
-// TODO: api gateway ssl cert, health checks
-
-

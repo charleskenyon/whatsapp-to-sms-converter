@@ -62,21 +62,16 @@ resource "aws_ecs_task_definition" "example_task_definition" {
 resource "aws_security_group" "example_container_security_group" {
   name   = "${var.project}-service-security-group"
   vpc_id = var.vpc_id
-  ingress {
-    from_port       = var.container_port
-    to_port         = var.container_port
-    protocol        = "TCP"
-    cidr_blocks     = ["0.0.0.0/0"]
-    security_groups = var.frontend_security_group_id != null ? [var.frontend_security_group_id] : []
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "example_container_security_group_ingress" {
+  security_group_id            = aws_security_group.example_container_security_group.id
+  from_port                    = var.container_port
+  to_port                      = var.container_port
+  ip_protocol                  = "TCP"
+  referenced_security_group_id = var.frontend_security_group_id
 }
