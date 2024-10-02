@@ -1,6 +1,6 @@
 all: init validate plan
 
-include .env
+-include .env
 
 layer							?= whatsapp-converter-service
 

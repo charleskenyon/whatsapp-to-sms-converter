@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ..
+
 source .env
 
 REPO_NAME="whatsapp-to-sms-converter"

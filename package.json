@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Software stack for converting whatsapp messages to sms messages. Requires AWS account and running fargate instance.",
   "scripts": {
-    "dev": "./local-setup-and-run.sh",
-    "dev-docker": "./local-setup-and-run.sh docker",
+    "dev": "./scripts/local-setup-and-run.sh",
+    "dev-docker": "./scripts/local-setup-and-run.sh docker",
     "build": "rimraf ./dist && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,0 +1,71 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+
+env:
+  AWS_REGION: 'eu-west-2'
+  AWS_ACCOUNT_ID: '493527389854'
+  TERRAFORM_VERSION: '1.9.3'
+
+concurrency: ci-${{ github.repository }}-docker-pipeline
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-push-ecr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-oidc
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: prepare ECR repo name based on the Github repository
+        shell: bash
+        run: |
+          set -eux
+          echo "ECR_REPO_NAME=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: TF init validate plan apply
+        shell: bash
+        run: |
+          set -eux
+          make layer=image-repo
+          make apply layer=image-repo
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: ${{ inputs.aws_account_id }}
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-publish
+        shell: bash
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_NAME: 'whatsapp-to-sms-converter'
+          TAG: 'latest'
+        run: |
+          set -eux
+          ECR_REPO_URL="$ECR_REGISTRY/$IMAGE_NAME"
+          docker build -t $IMAGE_NAME .
+          docker tag $IMAGE_NAME:latest $ECR_REPO_URL:$TAG
+          docker push $ECR_REPO_URL:$TAG
+          echo "Docker image pushed to ECR: ${ECR_REPO_URL}:${TAG}"

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd ..
+
 source .env
 
 killall ngrok
