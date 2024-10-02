@@ -69,3 +69,43 @@ jobs:
           docker tag $IMAGE_NAME:latest $ECR_REPO_URL:$TAG
           docker push $ECR_REPO_URL:$TAG
           echo "Docker image pushed to ECR: ${ECR_REPO_URL}:${TAG}"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push-ecr
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-oidc
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: TF init validate plan apply
+        shell: bash
+        run: |
+          set -eux
+          make layer=whatsapp-converter-service
+          make apply layer=whatsapp-converter-service
+
+      - name: Update Twilio Websocket endpoint
+        shell: bash
+        env:
+          TWILIO_NUMBER_SID: ${{ secrets.TWILIO_NUMBER_SID }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+        run: |
+          set -eux
+          cd infrastructure/layers/whatsapp-converter-service
+          API_GATEWAY_URL=$(terraform output api_gateway_url | sed 's/"//g')
+          curl -X POST https://api.twilio.com/2010-04-01/Accounts/$TWILIO_ACCOUNT_SID/IncomingPhoneNumbers/$TWILIO_NUMBER_SID.json \
+            --data-urlencode "SmsUrl=$API_GATEWAY_URL/sms" \
+            -u $TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN
