@@ -23,7 +23,8 @@ console.log(
   TWILIO_AUTH_TOKEN,
   TWILIO_NUMBER,
   RECEIVING_PHONE_NUMBER,
-  CONTAINER_PORT
+  CONTAINER_PORT,
+  'WORKINGs'
 );
 
 const baseConfig = { region: AWS_REGION };
@@ -36,7 +37,11 @@ const AWS = {
 const whatsappClient = new Client({
   qrMaxRetries: 10,
   puppeteer: {
-    args: ['--no-sandbox'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+    ],
   },
 });
 
@@ -60,17 +65,3 @@ export {
   app,
   cache,
 };
-
-// ssl explained
-
-// const options = {
-// key: fs.readFileSync('server-key.pem'),
-// cert: fs.readFileSync('server-cert.pem'),
-// ca: fs.readFileSync('apig-cert.pem'),
-// requestCert: true,
-// rejectUnauthorized: true
-// };
-
-// https.createServer(options, app).listen(443, () => {
-//   console.log('Server running on port 443');
-// });

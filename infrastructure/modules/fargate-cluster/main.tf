@@ -75,3 +75,10 @@ resource "aws_vpc_security_group_ingress_rule" "example_container_security_group
   ip_protocol                  = "TCP"
   referenced_security_group_id = var.frontend_security_group_id
 }
+
+resource "aws_vpc_security_group_egress_rule" "example_container_security_group_egress" {
+  ip_protocol       = -1
+  cidr_ipv4         = "0.0.0.0/0"
+  security_group_id = aws_security_group.example_container_security_group.id
+}
+

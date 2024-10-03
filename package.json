@@ -6,7 +6,8 @@
     "dev": "./scripts/local-setup-and-run.sh",
     "dev-docker": "./scripts/local-setup-and-run.sh docker",
     "build": "rimraf ./dist && tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "push-image": "./scripts/build-and-push-image.sh"
   },
   "repository": {
     "type": "git",
