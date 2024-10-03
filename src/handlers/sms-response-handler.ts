@@ -10,11 +10,9 @@ const smsResponseHandler = async (
   const {
     body: { Body: messageResponse },
   } = req;
-  console.log('message response: ', messageResponse);
 
   const responseRegex = /^<([^>]+)>\s*(.*)$/;
   const [, name, response] = messageResponse.match(responseRegex);
-  console.log('*', name, response);
 
   const contactId: string = cache.get(name) || (await getContactId(name));
 

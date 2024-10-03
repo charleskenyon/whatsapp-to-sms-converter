@@ -4,11 +4,11 @@ source .env
 
 killall ngrok
 
-sleep 1
+sleep 2
 
 ngrok http 3000 > /dev/null &
 
-sleep 1
+sleep 2
 
 NGROK_URL=$(curl --silent http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[] | select(.proto == "https") | .public_url')
 

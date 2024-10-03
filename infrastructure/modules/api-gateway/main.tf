@@ -82,6 +82,3 @@ resource "aws_cloudwatch_log_group" "example_log_group" {
   name              = "/aws/apigateway/${var.service_name}"
   retention_in_days = 1
 }
-
-# generate certificate and verify in express that connections only come from api gateway
-# https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-client-side-ssl-authentication.html

@@ -10,8 +10,6 @@ whatsappClient.on('message_create', messageHandler);
 
 whatsappClient.initialize();
 
-console.log('WORKING!!34!');
-
 app.post(
   '/sms',
   bodyParser.urlencoded({ extended: false }),

@@ -64,7 +64,6 @@ module "fargate_cluster" {
       {
         "name" : var.project,
         "image" : data.terraform_remote_state.image_repo.outputs.image_url_latest,
-        # "pseudoTerminal" : true,
         "interactive" : true,
         "portMappings" : [
           {
@@ -76,7 +75,9 @@ module "fargate_cluster" {
           "options" : {
             "awslogs-region" : var.region,
             "awslogs-group" : local.log_group_prefix,
-            "awslogs-stream-prefix" : "ecs"
+            "awslogs-stream-prefix" : "ecs",
+            "mode" : "non-blocking",
+            "max-buffer-size" : "256"
           }
         },
         "environment" : [
@@ -114,7 +115,7 @@ module "fargate_cluster" {
           }
         ],
         healthCheck = {
-          command      = ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
+          command      = ["CMD-SHELL", "curl -f http://localhost:${var.container_port}/health || exit 1"]
           interval     = 30
           timeout      = 5
           retries      = 3

@@ -10,7 +10,7 @@ const generatePresignedUrl = (key: string): Promise<string> =>
       Key: key,
     }),
     {
-      expiresIn: 60,
+      expiresIn: 120,
     }
   );
 

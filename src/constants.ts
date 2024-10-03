@@ -15,18 +15,6 @@ const {
   CONTAINER_PORT,
 } = process.env;
 
-console.log(
-  'ENV!!!___',
-  AWS_REGION,
-  WHATSAPP_MEDIA_BUCKET,
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_NUMBER,
-  RECEIVING_PHONE_NUMBER,
-  CONTAINER_PORT,
-  'WORKINGs'
-);
-
 const baseConfig = { region: AWS_REGION };
 
 const AWS = {

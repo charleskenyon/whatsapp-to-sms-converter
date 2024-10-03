@@ -8,6 +8,7 @@ on:
       - 'infrastructure/**'
       - 'src/**'
       - 'Dockerfile'
+  workflow_dispatch:
   pull_request:
 
 env:
