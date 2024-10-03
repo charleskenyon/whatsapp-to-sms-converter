@@ -2,7 +2,12 @@ name: Deploy
 
 on:
   push:
-    branches: [$default-branch]
+    branches:
+      - master
+    paths:
+      - 'infrastructure/**'
+      - 'src/**'
+      - 'Dockerfile'
   pull_request:
 
 env:

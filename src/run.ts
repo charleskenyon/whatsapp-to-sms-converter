@@ -1,20 +1,20 @@
-// import bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 import { whatsappClient, app, CONTAINER_PORT } from './constants';
-// import { qrHandler, messageHandler, smsResponseHandler } from './handlers';
+import { qrHandler, messageHandler, smsResponseHandler } from './handlers';
 
 whatsappClient.on('ready', () => console.log('Whatsapp client is ready!'));
 
-// whatsappClient.on('qr', qrHandler);
+whatsappClient.on('qr', qrHandler);
 
-// whatsappClient.on('message_create', messageHandler);
+whatsappClient.on('message_create', messageHandler);
 
-// whatsappClient.initialize();
+whatsappClient.initialize();
 
-// app.post(
-//   '/sms',
-//   bodyParser.urlencoded({ extended: false }),
-//   smsResponseHandler
-// );
+app.post(
+  '/sms',
+  bodyParser.urlencoded({ extended: false }),
+  smsResponseHandler
+);
 
 app.get('/health', (_req, res) => {
   res.status(200).json({ status: 'UP' });
@@ -23,8 +23,3 @@ app.get('/health', (_req, res) => {
 app.listen(CONTAINER_PORT, () => {
   console.log(`app listening on port ${CONTAINER_PORT}`);
 });
-
-// https://docs.github.com/en/actions/quickstart
-// https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
-// docker build --tag=whatsapp .
-// docker run --rm -it -p 3000:3000 --env-file=.env -v ~/.aws:/root/.aws whatsapp

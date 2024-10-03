@@ -1,8 +1,8 @@
 # whatsapp-to-sms-converter
 
-Application converts Whatsapp messages to sms and forwards the messages back and forth to and from the Whatsapp account using a Twilio number. The idea is that Whatsapp messages can be sent and received on a dumb phone that is unable to run Whatsapp.
+Application converts Whatsapp messages to sms and forwards them back and forth using Twilio. The idea being that Whatsapp messages can be sent and received on a dumb phone that is unable to run Whatsapp.
 
-The application is designed to be run 24/7 on a ECS Fargate container and requires an initial login to the Whatsapp web app using a QR code on first startup. The whatsapp-web.js[https://wwebjs.dev/] NodeJS client then manages incoming and outgoing Whatsapp messages on the ECS container and converts them to and from sms messages that are handled using the Twilio client.
+The application is designed to be run 24/7 on a ECS Fargate container and requires an initial login to the Whatsapp web app using a QR code on first startup. The [whatsapp-web.js](https://wwebjs.dev/) NodeJS client then manages incoming and outgoing Whatsapp messages on the ECS container and converts them to and from sms messages that are handled using the Twilio client.
 
 ## setup
 
