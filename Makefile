@@ -44,4 +44,4 @@ output:
 	cd infrastructure/layers/$(layer) && terraform output
 
 format:
-	cd infrastructure/layers/$(layer) && terraform fmt
+	cd infrastructure/layers/$(layer) && terraform fmt -check

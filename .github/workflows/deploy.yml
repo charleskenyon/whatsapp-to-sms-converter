@@ -2,8 +2,8 @@ name: Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [$default-branch]
+  pull_request:
 
 env:
   AWS_REGION: 'eu-west-2'
@@ -15,6 +15,10 @@ concurrency: ci-${{ github.repository }}-docker-pipeline
 permissions:
   id-token: write
   contents: read
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build-and-push-ecr:
@@ -92,7 +96,10 @@ jobs:
         shell: bash
         run: |
           set -eux
-          make layer=whatsapp-converter-service
+          make init layer=whatsapp-converter-service
+          make format layer=whatsapp-converter-service
+          make validate layer=whatsapp-converter-service
+          make plan layer=whatsapp-converter-service
           make apply layer=whatsapp-converter-service
 
       - name: Update Twilio Websocket endpoint
