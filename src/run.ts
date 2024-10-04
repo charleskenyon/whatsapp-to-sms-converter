@@ -6,7 +6,7 @@ whatsappClient.on('ready', () => console.log('Whatsapp client is ready!'));
 
 whatsappClient.on('qr', qrHandler);
 
-whatsappClient.on('message_create', messageHandler);
+whatsappClient.on('message', messageHandler);
 
 whatsappClient.initialize();
 
