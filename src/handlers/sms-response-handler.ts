@@ -17,6 +17,7 @@ const smsResponseHandler = async (
   const chatId: string = cache.get(name) || (await getContactId(name));
 
   whatsappClient.sendMessage(chatId, response as unknown as string);
+  console.log(`sent to ${chatId}: ${response}`);
 
   const twiml = new Twilio.twiml.MessagingResponse();
   res.type('text/xml').send(twiml.toString());

@@ -7,6 +7,7 @@ const messageHandler = async (message: WAWebJS.Message) => {
   const { name } = await whatsappClient.getContactById(from);
   await twilioMessage(`<${name}> ${body}`);
   cache.set(name, from);
+  console.log(`${from}: <${name}> ${body}`);
 };
 
 export default messageHandler;

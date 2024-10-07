@@ -53,7 +53,7 @@ module "fargate_cluster" {
   container_port                 = var.container_port
   enable_spot                    = true
   cloudmap_service_discovery_arn = module.cloudmap.service_discovery_service_arn
-  desired_count                  = 0
+  desired_count                  = 1
   execution_role_arn             = aws_iam_role.whatsapp_converter_task_execution_role.arn
   task_role_arn                  = aws_iam_role.whatsapp_converter_task_role.arn
   cloudwatch_log_group_prefix    = local.log_group_prefix
@@ -116,7 +116,7 @@ module "fargate_cluster" {
         ],
         healthCheck = {
           command      = ["CMD-SHELL", "curl -f http://localhost:${var.container_port}/health || exit 1"]
-          interval     = 300
+          interval     = 180
           timeout      = 5
           retries      = 3
           start_period = 0
