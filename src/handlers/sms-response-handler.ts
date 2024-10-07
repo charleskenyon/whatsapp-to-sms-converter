@@ -14,9 +14,9 @@ const smsResponseHandler = async (
   const responseRegex = /^<([^>]+)>\s*(.*)$/;
   const [, name, response] = messageResponse.match(responseRegex);
 
-  const contactId: string = cache.get(name) || (await getContactId(name));
+  const chatId: string = cache.get(name) || (await getContactId(name));
 
-  whatsappClient.sendMessage(contactId, response as unknown as string);
+  whatsappClient.sendMessage(chatId, response as unknown as string);
 
   const twiml = new Twilio.twiml.MessagingResponse();
   res.type('text/xml').send(twiml.toString());
