@@ -100,6 +100,12 @@ jobs:
 
       - name: TF init validate plan apply
         shell: bash
+        env:
+          TWILIO_NUMBER: ${{ secrets.TWILIO_NUMBER }}
+          TWILIO_NUMBER_SID: ${{ secrets.TWILIO_NUMBER_SID }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          RECEIVING_PHONE_NUMBER: ${{ secrets.RECEIVING_PHONE_NUMBER }}
         run: |
           set -eux
           make init layer=whatsapp-converter-service
