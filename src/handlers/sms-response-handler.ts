@@ -7,20 +7,24 @@ const smsResponseHandler = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const {
-    body: { Body: messageResponse },
-  } = req;
+  try {
+    const {
+      body: { Body: messageResponse },
+    } = req;
 
-  const responseRegex = /^<([^>]+)>\s*(.*)$/;
-  const [, name, response] = messageResponse.match(responseRegex);
+    const responseRegex = /^<([^>]+)>\s*(.*)$/;
+    const [, name, response] = messageResponse.match(responseRegex);
 
-  const chatId: string = cache.get(name) || (await getContactId(name));
+    const chatId: string = cache.get(name) || (await getContactId(name));
 
-  whatsappClient.sendMessage(chatId, response as unknown as string);
-  console.log(`sent to ${chatId}: ${response}`);
+    whatsappClient.sendMessage(chatId, response as unknown as string);
+    console.log(`sent to ${chatId}: ${response}`);
 
-  const twiml = new Twilio.twiml.MessagingResponse();
-  res.type('text/xml').send(twiml.toString());
+    const twiml = new Twilio.twiml.MessagingResponse();
+    res.type('text/xml').send(twiml.toString());
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export default smsResponseHandler;
