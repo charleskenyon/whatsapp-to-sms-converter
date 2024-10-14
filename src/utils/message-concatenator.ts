@@ -8,7 +8,6 @@ async function* messageConcatenator( // send messages in batches 1600 characters
 
   setInterval(async () => {
     if (concatenatedMsgs.length) {
-      console.log('FLUSH', concatenatedMsgs);
       await twilioMessage(concatenatedMsgs);
       concatenatedMsgs = '';
     }
@@ -16,20 +15,18 @@ async function* messageConcatenator( // send messages in batches 1600 characters
 
   while (true) {
     const inputMsg: string = yield concatenatedMsgs;
-    console.log('new run');
     const predictedLength = [concatenatedMsgs, ' ', inputMsg.trim()].reduce(
       (ac, cv) => (ac += cv.length),
       0
     );
-    console.log(concatenatedMsgs.length);
+
     if (predictedLength > maxCharacterLength) {
-      console.log('GREATER THAN 1600!!');
       await twilioMessage(concatenatedMsgs);
+      console.log('SENT: ', concatenatedMsgs);
       concatenatedMsgs = inputMsg.trim();
     } else {
       console.log('else');
       concatenatedMsgs += ' ' + inputMsg.trim();
-      console.log('concatenatedMsgs', concatenatedMsgs);
     }
   }
 }

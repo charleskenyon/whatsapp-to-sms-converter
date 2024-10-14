@@ -12,7 +12,6 @@ const messageHandler = async (message: WAWebJS.Message) => {
     const time = getDigitalTime(timestamp);
     const { name } = await whatsappClient.getContactById(from);
     await generator.next(`<${name} | ${time}> ${body}`);
-    // await twilioMessage(`<${name} | ${time}> ${body}`);
     cache.set(name, from);
     console.log(`${from}: <${name} | ${time}> ${body}`);
   }
