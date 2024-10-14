@@ -23,7 +23,7 @@ const AWS = {
 };
 
 const whatsappClient = new Client({
-  qrMaxRetries: 1,
+  qrMaxRetries: 0,
   puppeteer: {
     args: [
       '--no-sandbox',

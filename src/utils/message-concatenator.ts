@@ -25,7 +25,6 @@ async function* messageConcatenator( // send messages in batches 1600 characters
       console.log('SENT: ', concatenatedMsgs);
       concatenatedMsgs = inputMsg.trim();
     } else {
-      console.log('else');
       concatenatedMsgs += ' ' + inputMsg.trim();
     }
   }
