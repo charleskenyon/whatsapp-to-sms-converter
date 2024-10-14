@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/charleskenyon/whatsapp-to-sms-converter#readme",
   "devDependencies": {
+    "@types/emoji-strip": "^1.0.2",
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.0",
     "@types/qr-image": "^3.2.9",
@@ -40,6 +41,7 @@
     "@aws-sdk/client-sns": "^3.632.0",
     "@aws-sdk/s3-request-presigner": "^3.633.0",
     "body-parser": "^1.20.2",
+    "emoji-strip": "^1.0.1",
     "express": "^4.19.2",
     "node-cache": "^5.1.2",
     "qr-image": "^3.2.0",
