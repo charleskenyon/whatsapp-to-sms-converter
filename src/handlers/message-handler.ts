@@ -11,6 +11,7 @@ const messageHandler = async (message: WAWebJS.Message) => {
   const strippedBody = emojiStrip(body);
   const chat = await message.getChat();
   if (
+    !chat.archived &&
     !chat.isMuted &&
     message.type !== MessageTypes.CALL_LOG &&
     strippedBody.length
